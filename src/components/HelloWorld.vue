@@ -2,16 +2,12 @@
 import { Configuration, OpenAIApi } from 'openai';
 import { ref } from 'vue';
 const image_url = ref(false);
-const image_size = ref("1024x1024");
-const sizeInput = ref("1024x1024");
+const image_size = ref("512x512");
+const sizeInput = ref("512x512");
 const loading = ref(false);
 const prompt = ref("");
 
-defineProps({
-  msg: String
-});
-
-const OPENAI_API_KEY = "YOUR_OPEN_AI_HERE"
+const OPENAI_API_KEY = "OPEN_KEY_HERE"
 
 /* If you create .env with OPENAI_API_KEY=
 replace import.meta.env to process.env 
@@ -47,15 +43,22 @@ const updateSize = () => {
     <div class="flex">
       <input type="text" v-model="prompt" required placeholder="What is in your mind ? 🧠">
       <select v-model="sizeInput" @change="updateSize">
-        <option value="1024x1024" selected>1024x1024</option>
-        <option value="512x512">512x512</option>
+        <option value="512x512" selected>512x512</option>
         <option value="256x256">256x256</option>
+        <option value="1024x1024">1024x1024</option>
+        
       </select>
       <button type="submit">🚀</button>
     </div>
   </form>
-  <div class="loader" v-if="loading"></div>
-  <img v-if="image_url" :src="image_url">
+  <div v-if="loading" class="loading-div">
+    <div class="loader"></div>
+    <p>Generating your masterpiece!</p>
+  </div>
+  <div class="img-box" v-if="image_url">
+    <a class="donwload-img" :href="image_url" download>Download</a>
+    <img :src="image_url">
+  </div>
 </template>
 
 <style scoped>
@@ -101,6 +104,9 @@ input::placeholder {
   color: rgb(204, 204, 204);
 }
 
+.loading-div{
+  text-align: center;
+}
 .loader {
   border: 8px solid #f3f3f3;
   border-radius: 50%;
@@ -133,5 +139,23 @@ input::placeholder {
   100% {
     transform: rotate(360deg);
   }
+}
+
+img{
+  border-radius: 10px;
+}
+.img-box{
+  position: relative;
+}
+.donwload-img{
+  padding: 10px 20px;
+  position: absolute;
+  top: 15px;
+  left: 45%;
+  z-index: 5;
+  color: white;
+  font-weight: 500;
+  border-radius: 10px;
+  background-color: #ec1947;
 }
 </style>
